@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import IssueApi from "../../apis/issueApi";
+import { marginAuto } from "../../styles/common";
 import IssueCard from "./components/List/Card/card";
 
 function IssueListPage() {
@@ -35,15 +36,22 @@ function IssueListPage() {
 }
 export default IssueListPage;
 
-const Wrapper = styled.ul`
+const Wrapper = styled.div`
     width: 100%;
 `;
-const Container = styled.div``;
-
-const Title = styled.div``;
-const Content = styled.div`
+const Container = styled.div`
     width: 50%;
-    margin: 0 auto;
+    ${marginAuto}
+`;
+
+const Title = styled.div`
+    font-size: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+`;
+
+const Content = styled.ul`
+    ${marginAuto}
     text-align: center;
 `;
 const S = {

@@ -11,13 +11,14 @@ function IssueCard({ issue }) {
 export default IssueCard;
 
 const Wrapper = styled.li`
-
     margin: 10px;
 `;
 
 const Card = styled.div`
     padding: 20px;
-    border: 1px solid;
+    background-color: ${({ theme }) => theme.PALETTE.gray[100]};
+    border: 1px solid ${({ theme }) => theme.PALETTE.gray[200]};
+    border-radius: 10px;
 `;
 
 const Title = styled.div``;
