@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -17,7 +17,7 @@ function IssueListPage() {
 	const issues = useSelector(store => store.issue.issues)
 	const getIssueState = useSelector(store => store.issue.getIssueState)
 	const { owner, repository, page, sort, per_page } = useParams()
-	console.log(owner, repository, page)
+	const [goPage, setGoPage] = useState(1)
 
 	useEffect(() => {
 		dispatch(
@@ -44,8 +44,11 @@ function IssueListPage() {
 					<S.Wrapper>
 						<S.Container>
 							<S.Title>List</S.Title>
-							<SortBox></SortBox>
-							<PerPageBox></PerPageBox>
+							<S.Filter>
+								<SortBox setGoPage={setGoPage} />
+								<PerPageBox setGoPage={setGoPage} />
+							</S.Filter>
+
 							<S.Content>
 								{issues &&
 									issues.map(issue => {
@@ -75,6 +78,8 @@ const Title = styled.div`
 	margin-bottom: 15px;
 `
 
+const Filter = styled.div``
+
 const Content = styled.ul`
 	${marginAuto}
 	text-align: center;
@@ -83,5 +88,6 @@ const S = {
 	Wrapper,
 	Container,
 	Title,
+	Filter,
 	Content,
 }
