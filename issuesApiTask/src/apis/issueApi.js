@@ -1,8 +1,8 @@
 import { Axios } from "./core";
 
 const IssueApi = {
-    getIssue() {
-        return Axios.get(`/repos/angular/angular-cli/issues`);
+    getIssue(owner, repository, params) {
+        return Axios.get(`/repos/${owner}/${repository}/issues`, { params });
     },
 };
 

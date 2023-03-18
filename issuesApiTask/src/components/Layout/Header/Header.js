@@ -1,25 +1,54 @@
 import styled from "styled-components";
 import { flexAlignCenter } from "../../../styles/common";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { searchIssue } from "../../../stores/search";
 
 function Header() {
-    const [inputText, setInputText] = useState();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const searchText = useSelector((store) => store.search.text);
+    const [inputText, setInputText] = useState("");
+
+    useEffect(() => {
+        setInputText(searchText);
+    }, [searchText]);
 
     const onChangeSearch = (e) => {
         setInputText(e.target.value);
     };
 
+    const onSubmitSearch = () => {
+        dispatch(searchIssue.editSearchText(inputText));
+        const splitText = inputText.split("/");
+        const owner = splitText[3];
+        const repository = splitText[4];
+        navigate(`/${owner}/${repository}/1/created/10`);
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") {
+            onSubmitSearch();
+        }
+    };
+
     return (
         <S.Wrapper>
             <S.Container>
-                <S.Logo src={process.env.PUBLIC_URL + "/logo.png"}></S.Logo>
-                <S.Text>Github Issue</S.Text>
+                <S.LogoBox onClick={() => (window.location.href = "/")}>
+                    <S.Logo src={process.env.PUBLIC_URL + "/logo.png"}></S.Logo>
+                    <S.Text>Github Issue</S.Text>
+                </S.LogoBox>
+
                 <S.InputBox
-                    placeholder="깃허브 레포지토리 주소를 복붙해주세요📃"
+                    value={inputText}
+                    placeholder="깃허브 레포지토리 주소를 복붙해주세요!"
                     onChange={onChangeSearch}
+                    onKeyDown={handleKeyPress}
                 ></S.InputBox>
-                <S.Icon>
+                <S.Icon onClick={onSubmitSearch}>
                     <AiOutlineSearch size={35} />
                 </S.Icon>
             </S.Container>
@@ -38,6 +67,14 @@ const Container = styled.div`
     ${flexAlignCenter}
     justify-content: center;
     margin: 0 auto;
+`;
+
+const LogoBox = styled.div`
+    display: flex;
+    align-items: center;
+    :hover {
+        cursor: pointer;
+    }
 `;
 
 const Logo = styled.img`
@@ -68,6 +105,7 @@ const Icon = styled.div``;
 const S = {
     Wrapper,
     Container,
+    LogoBox,
     Logo,
     Text,
     InputBox,

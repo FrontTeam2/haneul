@@ -1,37 +1,71 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import IssueApi from "../../apis/issueApi";
+import { getIssue } from "../../stores/issue";
+import { searchIssue } from "../../stores/search";
 import { marginAuto } from "../../styles/common";
-import IssueCard from "./components/List/Card/card";
+import IssueCard from "./components/Card/card";
+import PerPageBox from "./components/Select/perPage";
+import SortBox from "./components/Select/sort";
 
 function IssueListPage() {
-    const [issues, setIssues] = useState([]);
-    const issuesList = async () => {
-        try {
-            const res = await IssueApi.getIssue();
-            setIssues(res.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    console.log(issues);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const issues = useSelector((store) => store.issue.issues);
+    const getIssueState = useSelector((store) => store.issue.getIssueState);
+    const { owner, repository, page, sort, per_page } = useParams();
+    console.log(owner, repository, page);
 
     useEffect(() => {
-        issuesList();
+        dispatch(
+            searchIssue.editSearchText(
+                `https://github.com/${owner}/${repository}`
+            )
+        );
     }, []);
 
+    const getData = useCallback(async () => {
+        dispatch(
+            getIssue({ owner, repository, params: { page, sort, per_page } })
+        );
+    }, [owner, repository, page, sort, per_page]);
+
+    useEffect(() => {
+        getData();
+    }, [getData]);
+
+    console.log(issues);
+
     return (
-        <S.Wrapper>
-            <S.Container>
-                <S.Title>List</S.Title>
-                <S.Content>
-                    {issues &&
-                        issues.map((issue) => {
-                            return <IssueCard key={issue.id} issue={issue} />;
-                        })}
-                </S.Content>
-            </S.Container>
-        </S.Wrapper>
+        <>
+            {getIssueState.loading ? (
+                <div>div</div>
+            ) : (
+                <>
+                    <S.Wrapper>
+                        <S.Container>
+                            <S.Title>List</S.Title>
+                            <SortBox></SortBox>
+                            <PerPageBox></PerPageBox>
+                            <S.Content>
+                                {issues &&
+                                    issues.map((issue) => {
+                                        return (
+                                            <IssueCard
+                                                key={issue.id}
+                                                issue={issue}
+                                            />
+                                        );
+                                    })}
+                            </S.Content>
+                        </S.Container>
+                    </S.Wrapper>
+                </>
+            )}
+        </>
     );
 }
 export default IssueListPage;

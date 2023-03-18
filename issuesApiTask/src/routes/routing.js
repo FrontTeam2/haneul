@@ -14,11 +14,11 @@ const router = createBrowserRouter([
                 element: <HomePage />,
             },
             {
-                path: "list",
+                path: "/:owner/:repository/:page/:sort/:per_page",
                 element: <IssueListPage />,
             },
             {
-                path: "detail",
+                path: "/:owner/:repository/:number",
                 element: <IssueDetailPage />,
             },
         ],
