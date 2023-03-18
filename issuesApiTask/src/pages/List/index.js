@@ -7,8 +7,8 @@ import { getIssue } from '../../stores/issue'
 import { searchIssue } from '../../stores/search'
 import { marginAuto } from '../../styles/common'
 import IssueCard from './components/Card/card'
-import PerPageBox from './components/Select/perPage'
-import SortBox from './components/Select/sort'
+import PerPageBox from './components/Filter/perPage'
+import SortBox from './components/Filter/sort'
 
 function IssueListPage() {
 	const dispatch = useDispatch()
