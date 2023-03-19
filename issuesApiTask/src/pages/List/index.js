@@ -9,6 +9,7 @@ import { marginAuto } from '../../styles/common'
 import IssueCard from './components/Card/card'
 import PerPageBox from './components/Filter/perPage'
 import SortBox from './components/Filter/sort'
+import Pagination from './components/Pagination/pagination'
 
 function IssueListPage() {
 	const dispatch = useDispatch()
@@ -16,8 +17,12 @@ function IssueListPage() {
 
 	const issues = useSelector(store => store.issue.issues)
 	const getIssueState = useSelector(store => store.issue.getIssueState)
+
 	const { owner, repository, page, sort, per_page } = useParams()
 	const [goPage, setGoPage] = useState(1)
+	const totalItem = 200
+	const totalPage = Math.ceil(totalItem / per_page)
+	const limit = 10
 
 	useEffect(() => {
 		dispatch(
@@ -25,15 +30,21 @@ function IssueListPage() {
 		)
 	}, [])
 
+	useEffect(() => {
+		navigate(`/${owner}/${repository}/${goPage}/${sort}/${per_page}`)
+	}, [goPage])
+
 	const getData = useCallback(async () => {
+		console.log('getData')
 		dispatch(getIssue({ owner, repository, params: { page, sort, per_page } }))
 	}, [owner, repository, page, sort, per_page])
 
 	useEffect(() => {
+		console.log('getData2')
 		getData()
 	}, [getData])
 
-	console.log(issues)
+	console.log(page, goPage)
 
 	return (
 		<>
@@ -48,13 +59,18 @@ function IssueListPage() {
 								<SortBox setGoPage={setGoPage} />
 								<PerPageBox setGoPage={setGoPage} />
 							</S.Filter>
-
 							<S.Content>
 								{issues &&
 									issues.map(issue => {
 										return <IssueCard key={issue.id} issue={issue} />
 									})}
 							</S.Content>
+							<Pagination
+								totalPage={totalPage}
+								limit={limit}
+								page={goPage}
+								setPage={setGoPage}
+							/>
 						</S.Container>
 					</S.Wrapper>
 				</>
