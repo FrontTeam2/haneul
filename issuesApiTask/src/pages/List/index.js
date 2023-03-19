@@ -17,7 +17,7 @@ function IssueListPage() {
 
 	const issues = useSelector(store => store.issue.issues)
 	const getIssueState = useSelector(store => store.issue.getIssueState)
-
+	console.log(issues)
 	const { owner, repository, page, sort, per_page } = useParams()
 	const [goPage, setGoPage] = useState(1)
 	const totalItem = 200
@@ -33,6 +33,11 @@ function IssueListPage() {
 	useEffect(() => {
 		navigate(`/${owner}/${repository}/${goPage}/${sort}/${per_page}`)
 	}, [goPage])
+
+	const onNavigateDetailPage = id => {
+		console.log(id)
+		navigate(`/${owner}/${repository}/${id}`)
+	}
 
 	const getData = useCallback(async () => {
 		console.log('getData')
@@ -62,7 +67,13 @@ function IssueListPage() {
 							<S.Content>
 								{issues &&
 									issues.map(issue => {
-										return <IssueCard key={issue.id} issue={issue} />
+										return (
+											<IssueCard
+												key={issue.id}
+												issue={issue}
+												onNavigate={() => onNavigateDetailPage(issue.id)}
+											/>
+										)
 									})}
 							</S.Content>
 							<Pagination

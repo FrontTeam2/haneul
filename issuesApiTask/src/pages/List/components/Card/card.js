@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-function IssueCard({ issue }) {
+function IssueCard({ issue, onNavigate }) {
 	return (
-		<S.Wrapper>
+		<S.Wrapper onClick={onNavigate}>
 			<S.Card>
 				<S.Title>{issue.title}</S.Title>
 			</S.Card>
